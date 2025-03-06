@@ -11,6 +11,8 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @throws ValidationException
      */
     public function login(Request $request): JsonResponse
@@ -24,7 +26,7 @@ class AuthController extends Controller
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['Неверные учетные данные.'],
+                'email' => ['Incorrect credentials..'],
             ]);
         }
 
@@ -37,10 +39,14 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Вы успешно вышли из системы.']);
+        return response()->json(['message' => 'You have successfully logged out.']);
     }
 }
